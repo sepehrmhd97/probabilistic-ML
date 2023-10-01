@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import truncnorm, norm
 import matplotlib.pyplot as plt
 
-def gibbs_sampler(iterations, burn_in, y, mu, sigma, sigma_t):
+def gibbs_sampler(iterations, burn_in, mu, sigma):
     s1_samples = np.zeros(iterations + burn_in)
     s2_samples = np.zeros(iterations + burn_in)
     
@@ -10,17 +10,9 @@ def gibbs_sampler(iterations, burn_in, y, mu, sigma, sigma_t):
     s1_samples[0], s2_samples[0] = mu, mu  # Starting from the prior mean
     
     for i in range(1, iterations + burn_in):
-        # Sample t from p(t|s1, s2)
-        mean_t = s1_samples[i-1] - s2_samples[i-1]
-        t = norm.rvs(loc=mean_t, scale=sigma_t)
-        
         # Sample s1 and s2 from p(s1, s2|y, t)
-        if y == 1:
-            a1, b1 = (0 - s2_samples[i-1]) / sigma, np.inf
-            a2, b2 = -np.inf, (0 - s1_samples[i-1]) / sigma
-        else:
-            a1, b1 = -np.inf, (0 - s2_samples[i-1]) / sigma
-            a2, b2 = (0 - s1_samples[i-1]) / sigma, np.inf
+        a1, b1 = (mu - s2_samples[i-1]) / sigma, np.inf
+        a2, b2 = -np.inf, (mu - s1_samples[i-1]) / sigma
         
         s1_samples[i] = truncnorm.rvs(a1, b1, loc=mu, scale=sigma)
         s2_samples[i] = truncnorm.rvs(a2, b2, loc=mu, scale=sigma)
@@ -28,22 +20,15 @@ def gibbs_sampler(iterations, burn_in, y, mu, sigma, sigma_t):
     return s1_samples, s2_samples
 
 # Parameters
-iterations = 500000
-burn_in = 5000
-y = 1
+iterations = 1000
+burn_in = 100
 mu = 0  # Prior mean
 sigma = 1  # Prior standard deviation
-sigma_t = np.sqrt(sigma**2 + sigma**2 + 5)  # Variance from the likelihood
 
-s1_samples, s2_samples = gibbs_sampler(iterations, burn_in, y, mu, sigma, sigma_t)
+s1_samples, s2_samples = gibbs_sampler(iterations, burn_in, mu, sigma)
 
+print(s1_samples)
 
-
-
-# ... [previous code for Gibbs sampler] ...
-
-
-# ... [previous code for Gibbs sampler and Gaussian approximation] ...
 
 plt.figure(figsize=(12, 6))
 
