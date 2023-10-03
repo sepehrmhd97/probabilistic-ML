@@ -3,13 +3,13 @@ from scipy.stats import truncnorm, multivariate_normal, norm
 from scipy.linalg import inv
 
 # Gibbs sampler for to estimate the posterior distribution of p(s1, s2 | y) 
-def gibbs_sampler(n_iterations, burn_in, mu, sigma, sigma_t, y=1):
+def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, y=1):
 
     s1_samples = np.zeros(n_iterations + burn_in)
     s2_samples = np.zeros(n_iterations + burn_in)
 
-    s1_samples[0] = mu
-    s2_samples[0] = mu
+    s1_samples[0] = mu_1
+    s2_samples[0] = mu_2
 
     for i in range(1, burn_in + n_iterations):
 
@@ -30,11 +30,11 @@ def gibbs_sampler(n_iterations, burn_in, mu, sigma, sigma_t, y=1):
 
         # Calculate the covariance of the multivariate normal distribution
         term_1 = np.outer(np.array([1, -1]), np.array([1, -1])) * 1/(sigma_t**2)
-        term_2 = np.array([[sigma**2, 0], [0, sigma**2]]) * 1/(sigma**2 * sigma**2)
+        term_2 = np.array([[sigma_2**2, 0], [0, sigma_1**2]]) * 1/(sigma_1**2 * sigma_2**2)
         cov = inv(term_1 + term_2)
 
         # Calculate the mean of the multivariate normal distribution
-        term_3 = 1/(sigma**2 * sigma**2) * np.matmul(np.array([[sigma**2, 0], [0, sigma**2]]), np.array([mu, mu]))
+        term_3 = 1/(sigma_2**2 * sigma_1**2) * np.matmul(np.array([[sigma_2**2, 0], [0, sigma_1**2]]), np.array([mu_1, mu_2]))
         term_4 = 1/(sigma_t**2) * t * np.array([1, -1])
         mean = np.matmul(cov, term_3 + term_4)
 
