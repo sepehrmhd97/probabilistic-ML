@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import norm
 from gibbs import gibbs_sampler, gaussian_approximation
 from moment_matching import run_moment_matching
-from adf import run_adf, run_onestep_preds
+from adf import run_adf, run_onestep_preds, run_onestep_preds_improved, run_adf_improved
 from preprocessor import preprocess_dataset
 from utils import plot_trace_means_stds, plot_hists, plot_priors_posteriors, output_ranking, randomize_csv, plot_gibbs_vs_moment_matching
 import time
@@ -122,6 +122,17 @@ def q9(n_iters):
     # Output to file the ranking of the players using a conservative metric
     output_ranking(team_skills, "rankings_halo.txt", conservative=True)
 
+# Function that runs improved versions of ADF and prediction for Q10
+def q10(n_iters):
+
+    # Run the improved ADF algorithm
+    team_skills = run_adf_improved("./dataset/SerieA.csv", n_iters, burn_in, mu, sigma, sigma_t)
+
+    # Output the ranking of the teams to a file
+    output_ranking(team_skills, "rankings_improved.txt")
+
+    # # Run the improved one-step ahead predictions
+    run_onestep_preds_improved("./dataset/SerieA.csv", n_iters, burn_in, mu, sigma, sigma_t)
 
 
 if __name__ == "__main__":
@@ -145,20 +156,25 @@ if __name__ == "__main__":
 
     # Q5
     print("Running ADF for Q5")
-    q5(20000)
+    q5(7000)
     print("Finished running ADF for Q5!", end="\n\n")
 
     # Q6 
     print("Running One-step ahead predictions for Q6")
-    q6(20000)
+    q6(7000)
     print("Finished running One-step ahead predictions for Q6!", end="\n\n")
 
     # Q8
     print("Running moment matching and comparing to Gibbs sampler for Q8")
-    q8(20000)
+    q8(7000)
     print("Finished running moment matching and comparing to Gibbs sampler for Q8!", end="\n\n")
 
     # Q9
     print("Running ADF on a new dataset for Q9")
-    q9(20000)
+    q9(7000)
     print("Finished running ADF on a new dataset for Q9!", end="\n\n")
+
+    # Q10
+    print("Running improved ADF and one-step ahead predictions for Q10")
+    q10(7000)
+    print("Finished running improved ADF and one-step ahead predictions for Q10!", end="\n\n")

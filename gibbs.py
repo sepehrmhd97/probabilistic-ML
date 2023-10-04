@@ -3,7 +3,7 @@ from scipy.stats import truncnorm, multivariate_normal, norm
 from scipy.linalg import inv
 
 # Gibbs sampler for to estimate the posterior distribution of p(s1, s2 | y) 
-def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, y=1):
+def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, y=1, s1_update_coeff=1, s2_update_coeff=1):
 
     s1_samples = np.zeros(n_iterations + burn_in)
     s2_samples = np.zeros(n_iterations + burn_in)
@@ -17,25 +17,33 @@ def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, 
 
         # Mu_t = s1 - s2
         mu_t = s1_samples[i-1] - s2_samples[i-1]
+
+        # If team1 has won
         if (y == 1):
             # Sample from truncated normal distribution
             # With lower bound = 0 & upper bound = infinity
             t = truncnorm.rvs((0 - mu_t) / sigma_t, np.inf, loc=mu_t, scale=sigma_t)
-        else:
+        # If team2 has won
+        elif (y == -1):
             # Sample from truncated normal distribution
             # With lower bound = -infinity & upper bound = 0
             t = truncnorm.rvs(-np.inf, (0 - mu_t) / sigma_t, loc=mu_t, scale=sigma_t)
+        # If the match is a draw
+        else:
+            # Set t to zero in order to not favor any team
+            t = 0
 
+        A = np.array([1, -1])
         # Sample s1 and s2 from p(s1, s2 | t, y) => Q3.a
 
         # Calculate the covariance of the multivariate normal distribution
-        term_1 = np.outer(np.array([1, -1]), np.array([1, -1])) * 1/(sigma_t**2)
+        term_1 = np.outer(A, A) * 1/(sigma_t**2)
         term_2 = np.array([[sigma_2**2, 0], [0, sigma_1**2]]) * 1/(sigma_1**2 * sigma_2**2)
         cov = inv(term_1 + term_2)
 
         # Calculate the mean of the multivariate normal distribution
         term_3 = 1/(sigma_2**2 * sigma_1**2) * np.matmul(np.array([[sigma_2**2, 0], [0, sigma_1**2]]), np.array([mu_1, mu_2]))
-        term_4 = 1/(sigma_t**2) * t * np.array([1, -1])
+        term_4 = 1/(sigma_t**2) * t * A
         mean = np.matmul(cov, term_3 + term_4)
 
         # Sample from the multivariate normal distribution
