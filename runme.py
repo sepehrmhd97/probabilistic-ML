@@ -3,6 +3,7 @@ from scipy.stats import norm
 from gibbs import gibbs_sampler, gaussian_approximation
 from moment_matching import run_moment_matching
 from adf import run_adf, run_onestep_preds
+from preprocessor import preprocess_dataset
 from utils import plot_trace_means_stds, plot_hists, plot_priors_posteriors, output_ranking, randomize_csv, plot_gibbs_vs_moment_matching
 import time
 
@@ -14,8 +15,7 @@ sigma_t = sigma / 2
 burn_in = 3500
 
 # Run the Gibbs sampler for Q4.a and produce the plots
-def q4_a():
-    n_iterations = 20000
+def q4_a(n_iterations):
 
     # Run the Gibbs sampler
     s1_samples, s2_samples = gibbs_sampler(n_iterations, burn_in, mu, mu, sigma, sigma, sigma_t)
@@ -72,10 +72,10 @@ def q4_d(n_iters):
     plot_priors_posteriors(post_s1, post_s2, prior_s1, prior_s2)
 
 # Function that processes the data and updates the skill parameters for the teams for Q5
-def q5():
+def q5(n_iters):
 
     # Run the ADF algorithm
-    team_skills = run_adf("./dataset/SerieA.csv", 10000, 3500, mu, sigma, sigma_t)
+    team_skills = run_adf("./dataset/SerieA.csv", n_iters, burn_in, mu, sigma, sigma_t)
 
     # Output the ranking of the teams to a file
     output_ranking(team_skills, "rankings.txt")
@@ -86,14 +86,14 @@ def q5():
     print("Randomized the order of the matches! Re-running ADF with randomized matches...", end="\n\n")
 
     # Run the ADF algorithm again
-    team_skills = run_adf("./dataset/SerieA_randomized.csv", 10000, 3500, mu, sigma, sigma_t)
+    team_skills = run_adf("./dataset/SerieA_randomized.csv", n_iters, burn_in, mu, sigma, sigma_t)
 
     # Output the ranking of the teams to a file
     output_ranking(team_skills, "rankings_randomized.txt")
 
 # Function that runs one-step ahead predictions for Q6
-def q6():
-    team_skills = run_onestep_preds("./dataset/SerieA.csv", 10000, 3500, mu, sigma, sigma_t)
+def q6(n_iters):
+    team_skills = run_onestep_preds("./dataset/SerieA.csv", n_iters, burn_in, mu, sigma, sigma_t)
 
 # Function that runs moment matching for Q8
 def q8(n_iters):
@@ -110,11 +110,25 @@ def q8(n_iters):
     # Plot the Gaussian approximations and the samples
     plot_gibbs_vs_moment_matching(s1_samples, s2_samples, dist_s1, dist_s2, n_iters, burn_in)
 
+# Function that runs ADF on a new dataset for Q9
+def q9(n_iters):
+
+    # Preprocess the dataset and write it into a CSV file
+    preprocess_dataset("./dataset/Halo2-HeadToHead.objml", "./dataset/Halo2-HeadToHead.csv", n_matches=350)
+
+    #  Run the ADF algorithm
+    team_skills = run_adf("./dataset/Halo2-HeadToHead.csv", n_iters, burn_in, mu, sigma, sigma_t)
+
+    # Output to file the ranking of the players using a conservative metric
+    output_ranking(team_skills, "rankings_halo.txt", conservative=True)
+
+
+
 if __name__ == "__main__":
 
     # Q4.a
     print("Running Gibbs sampler for Q4.a")
-    s1_samples, s2_samples = q4_a()
+    s1_samples, s2_samples = q4_a(20000)
     print("Finished running Gibbs sampler for Q4.a!", end="\n\n")
     # Q4.b
     print("Fitting Gaussians for Q4.b")
@@ -126,20 +140,25 @@ if __name__ == "__main__":
     print("Finished running Gibbs sampler for different iterations for Q4.c!", end="\n\n")
     # Q4.d
     print("Plotting the posterior and prior distributions of s1 and s2 for Q4.d")
-    q4_d(50000)
+    q4_d(20000)
     print("Finished plotting the posterior and prior distributions of s1 and s2 for Q4.d!", end="\n\n")
 
     # Q5
     print("Running ADF for Q5")
-    q5()
+    q5(20000)
     print("Finished running ADF for Q5!", end="\n\n")
 
     # Q6 
     print("Running One-step ahead predictions for Q6")
-    q6()
+    q6(20000)
     print("Finished running One-step ahead predictions for Q6!", end="\n\n")
 
     # Q8
     print("Running moment matching and comparing to Gibbs sampler for Q8")
-    q8(50000)
+    q8(20000)
     print("Finished running moment matching and comparing to Gibbs sampler for Q8!", end="\n\n")
+
+    # Q9
+    print("Running ADF on a new dataset for Q9")
+    q9(20000)
+    print("Finished running ADF on a new dataset for Q9!", end="\n\n")

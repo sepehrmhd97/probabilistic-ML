@@ -130,10 +130,13 @@ def plot_priors_posteriors(post_s1, post_s2, prior_s1, prior_s2):
     plt.savefig('gibbs_priors_posteriors.png', bbox_inches="tight")
 
 # Function that outputs the ranking of the teams based on their skill parameters to a file
-def output_ranking(team_skills, filename):
+def output_ranking(team_skills, filename, conservative=False):
 
-    # Sort the teams based on their mean skill parameters
-    sorted_teams = sorted(team_skills.items(), key=lambda x: x[1][0], reverse=True)
+    # Sort the teams based on their mean skill parameters or conservative (mean - 3*std) skill parameters
+    if conservative:
+        sorted_teams = sorted(team_skills.items(), key=lambda x: x[1][0] - 3*x[1][1], reverse=True)
+    else:
+        sorted_teams = sorted(team_skills.items(), key=lambda x: x[1][0], reverse=True)
 
     # Write the sorted teams to a file with their rank, name, mean, and std
     with open(filename, "w") as f:
