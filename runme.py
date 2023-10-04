@@ -1,8 +1,9 @@
 import numpy as np
 from scipy.stats import norm
 from gibbs import gibbs_sampler, gaussian_approximation
+from moment_matching import run_moment_matching
 from adf import run_adf, run_onestep_preds
-from utils import plot_trace_means_stds, plot_hists, plot_priors_posteriors, output_ranking, randomize_csv
+from utils import plot_trace_means_stds, plot_hists, plot_priors_posteriors, output_ranking, randomize_csv, plot_gibbs_vs_moment_matching
 import time
 
 # Configurable Parameters:
@@ -92,9 +93,22 @@ def q5():
 
 # Function that runs one-step ahead predictions for Q6
 def q6():
-    team_skills = run_onestep_preds("./dataset/SerieA.csv", 5000, 3500, mu, sigma, sigma_t)
+    team_skills = run_onestep_preds("./dataset/SerieA.csv", 10000, 3500, mu, sigma, sigma_t)
 
+# Function that runs moment matching for Q8
+def q8(n_iters):
+    # Run moment matching
+    s1_m, s1_s, s2_m, s2_s = run_moment_matching(mu, sigma, sigma_t, 1)
 
+    # Fit Gaussain distributions with the mean and variance from moment matching
+    dist_s1 = norm(loc=s1_m, scale=s1_s)
+    dist_s2 = norm(loc=s2_m, scale=s2_s)
+
+    # Run the Gibbs sampler
+    s1_samples, s2_samples = gibbs_sampler(n_iters, burn_in, mu, mu, sigma, sigma, sigma_t)
+
+    # Plot the Gaussian approximations and the samples
+    plot_gibbs_vs_moment_matching(s1_samples, s2_samples, dist_s1, dist_s2, n_iters, burn_in)
 
 if __name__ == "__main__":
 
@@ -124,3 +138,8 @@ if __name__ == "__main__":
     print("Running One-step ahead predictions for Q6")
     q6()
     print("Finished running One-step ahead predictions for Q6!", end="\n\n")
+
+    # Q8
+    print("Running moment matching and comparing to Gibbs sampler for Q8")
+    q8(50000)
+    print("Finished running moment matching and comparing to Gibbs sampler for Q8!", end="\n\n")

@@ -14,6 +14,9 @@ def run_adf(filename, n_iters, burn_in, mu, sigma, sigma_t):
         i = 0
         for row in reader:
 
+            if (i + 1) % 100 == 0:
+                print("Processed {} matches".format(i + 1))
+
             # Skip the first row
             if i == 0:
                 i += 1
@@ -46,9 +49,6 @@ def run_adf(filename, n_iters, burn_in, mu, sigma, sigma_t):
 
             i += 1
 
-            if (i - 1) % 100 == 0:
-                print("Processed {} matches".format(i - 1))
-
     return team_skills
 
 # Function to predict the result of a match based on the skill parameters of the teams
@@ -75,6 +75,9 @@ def run_onestep_preds(filename, n_iters, burn_in, mu, sigma, sigma_t):
         correct_preds = 0
         total_nondraw_matches = 0
         for row in reader:
+            
+            if (i + 1) % 100 == 0:
+                print("Processed {} matches".format(i + 1))
 
             # Skip the first row
             if i == 0:
@@ -115,9 +118,6 @@ def run_onestep_preds(filename, n_iters, burn_in, mu, sigma, sigma_t):
             total_nondraw_matches += 1
 
             i += 1
-
-            if (i - 1) % 100 == 0:
-                print("Processed {} matches".format(i - 1))
 
     print("Accuracy of one-step ahead predictions: {}".format(correct_preds / total_nondraw_matches))
 
