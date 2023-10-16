@@ -1,3 +1,7 @@
-./APMLvenv
+/APMLvenv
+APMLvenv
+*APMLvenv
 ./__pycache__
 __pycache__/
+APMLvenv/
+*.APMLvenv

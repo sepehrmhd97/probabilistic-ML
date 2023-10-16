@@ -3,6 +3,10 @@ import numpy as np
 from scipy.stats import norm
 import random
 
+# Set the font properties
+font = {'family': 'Times New Roman', 'size': 15}
+plt.rc('font', **font)
+
 # Function that plots the trace, means, and stds of the samples throughout the sampling process
 def plot_trace_means_stds(s1_samples, s2_samples, burn_in = None, display=True):
 
@@ -34,9 +38,9 @@ def plot_trace_means_stds(s1_samples, s2_samples, burn_in = None, display=True):
     plt.legend()
 
     if burn_in is not None:
-        plt.savefig('gibbs_trace_burnin.png', bbox_inches="tight")
+        plt.savefig('gibbs_trace_burnin.svg', bbox_inches="tight")
     else:
-        plt.savefig('gibbs_trace.png', bbox_inches="tight")
+        plt.savefig('gibbs_trace.svg', bbox_inches="tight")
 
     # Plotting the mean of the samples throughout the sampling process
 
@@ -57,9 +61,9 @@ def plot_trace_means_stds(s1_samples, s2_samples, burn_in = None, display=True):
     plt.legend()
 
     if burn_in is not None:
-        plt.savefig('gibbs_means_burnin.png', bbox_inches="tight")
+        plt.savefig('gibbs_means_burnin.svg', bbox_inches="tight")
     else:
-        plt.savefig('gibbs_means.png', bbox_inches="tight")
+        plt.savefig('gibbs_means.svg', bbox_inches="tight")
 
     # Plotting the std of the samples throughout the sampling process
 
@@ -80,9 +84,9 @@ def plot_trace_means_stds(s1_samples, s2_samples, burn_in = None, display=True):
     plt.legend()
 
     if burn_in is not None:
-        plt.savefig('gibbs_stds_burnin.png', bbox_inches="tight")
+        plt.savefig('gibbs_stds_burnin.svg', bbox_inches="tight")
     else:
-        plt.savefig('gibbs_stds.png', bbox_inches="tight")
+        plt.savefig('gibbs_stds.svg', bbox_inches="tight")
 
     if display:
         plt.show()
@@ -107,7 +111,7 @@ def plot_hists(s1_samples, s2_samples, dist_s1, dist_s2, n_iterations):
     plt.ylabel("Frequency")
     plt.legend()
 
-    plt.savefig(f'gibbs_hists_{n_iterations}.png', bbox_inches="tight")
+    plt.savefig(f'gibbs_hists_{n_iterations}.svg', bbox_inches="tight")
 
 # Function that plots posterior distributions of s1 and s2 with the prior distributions
 def plot_priors_posteriors(post_s1, post_s2, prior_s1, prior_s2):
@@ -117,17 +121,16 @@ def plot_priors_posteriors(post_s1, post_s2, prior_s1, prior_s2):
 
     # Posterior of s1
     plt.plot(np.linspace(0, 50, 100), post_s1.pdf(np.linspace(0, 50, 100)), label="posterior of s1", color='blue')
-    plt.plot(np.linspace(0, 50, 100), prior_s1.pdf(np.linspace(0, 50, 100)), label="prior of s1", color='red')
+    plt.plot(np.linspace(0, 50, 100), prior_s1.pdf(np.linspace(0, 50, 100)), label="prior of s1 and s2", color='red')
 
     # Posterior of s2
     plt.plot(np.linspace(0, 50, 100), post_s2.pdf(np.linspace(0, 50, 100)), label="posterior of s2", color='orange')
-    plt.plot(np.linspace(0, 50, 100), prior_s2.pdf(np.linspace(0, 50, 100)), label="prior of s2", color='green')
     plt.title("Posterior and prior distributions of s1 and s2")
     plt.xlabel("s1, s2")
     plt.ylabel("Probability")
     plt.legend()
 
-    plt.savefig('gibbs_priors_posteriors.png', bbox_inches="tight")
+    plt.savefig('gibbs_priors_posteriors.svg', bbox_inches="tight")
 
 # Function that outputs the ranking of the teams based on their skill parameters to a file
 def output_ranking(team_skills, filename, conservative=False):
@@ -193,6 +196,6 @@ def plot_gibbs_vs_moment_matching(s1_samples, s2_samples, dist_s1, dist_s2, n_it
     plt.ylabel("Frequency")
     plt.legend()
 
-    plt.savefig(f'gibbs_vs_moment_matching.png', bbox_inches="tight")
+    plt.savefig(f'gibbs_vs_moment_matching.svg', bbox_inches="tight")
 
 

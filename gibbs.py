@@ -18,6 +18,7 @@ def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, 
         # Mu_t = s1 - s2
         mu_t = s1_samples[i-1] - s2_samples[i-1]
 
+
         # If team1 has won
         if (y == 1):
             # Sample from truncated normal distribution
@@ -27,13 +28,28 @@ def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, 
         elif (y == -1):
             # Sample from truncated normal distribution
             # With lower bound = -infinity & upper bound = 0
+            print(sigma_t)
             t = truncnorm.rvs(-np.inf, (0 - mu_t) / sigma_t, loc=mu_t, scale=sigma_t)
         # If the match is a draw
         else:
             # Set t to zero in order to not favor any team
             t = 0
 
-        A = np.array([1, -1])
+        # # Set the A vector as the team1 and 2 update coefficients
+        A = np.array([s1_update_coeff, -s2_update_coeff])
+
+        # # calculate the magnitude of the vector [s1_update_coeff, s2_update_coeff]
+        # magnitude = np.sqrt(s1_update_coeff**2 + s2_update_coeff**2)
+
+        # # normalize the coefficients
+        # s1_update_coeff_normalized = s1_update_coeff / magnitude
+        # s2_update_coeff_normalized = s2_update_coeff / magnitude
+
+        # # print(s1_update_coeff_normalized, s2_update_coeff_normalized)
+
+        # # create the array A with the normalized coefficients
+        # A = np.array([1, -1])
+
         # Sample s1 and s2 from p(s1, s2 | t, y) => Q3.a
 
         # Calculate the covariance of the multivariate normal distribution
@@ -41,9 +57,20 @@ def gibbs_sampler(n_iterations, burn_in, mu_1, mu_2, sigma_1, sigma_2, sigma_t, 
         term_2 = np.array([[sigma_2**2, 0], [0, sigma_1**2]]) * 1/(sigma_1**2 * sigma_2**2)
         cov = inv(term_1 + term_2)
 
+        # print(cov)
+        # print(sigma_t)
+
         # Calculate the mean of the multivariate normal distribution
         term_3 = 1/(sigma_2**2 * sigma_1**2) * np.matmul(np.array([[sigma_2**2, 0], [0, sigma_1**2]]), np.array([mu_1, mu_2]))
+
         term_4 = 1/(sigma_t**2) * t * A
+
+        # max_value = 1e10  # or whatever you deem appropriate
+        # if np.abs(term_4) > max_value:
+        #     term_4 = np.sign(term_4) * max_value
+
+        print(term_4)
+
         mean = np.matmul(cov, term_3 + term_4)
 
         # Sample from the multivariate normal distribution
