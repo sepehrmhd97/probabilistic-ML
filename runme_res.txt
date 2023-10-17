@@ -5,15 +5,15 @@ Fitting Gaussians for Q4.b
 Finished fitting Gaussians for Q4.b!
 
 Running Gibbs sampler for different n_iterations for Q4.c
-Time taken for 500 iterations: 1.400270 seconds
-Time taken for 1000 iterations: 1.339681 seconds
-Time taken for 2000 iterations: 1.778273 seconds
-Time taken for 5000 iterations: 2.941606 seconds
-Time taken for 10000 iterations: 4.791317 seconds
-Time taken for 20000 iterations: 8.000038 seconds
-Time taken for 30000 iterations: 13.768326 seconds
-Time taken for 50000 iterations: 16.902181 seconds
-Time taken for 100000 iterations: 34.876027 seconds
+Time taken for 500 iterations: 1.021768 seconds
+Time taken for 1000 iterations: 1.141491 seconds
+Time taken for 2000 iterations: 1.397990 seconds
+Time taken for 5000 iterations: 2.111229 seconds
+Time taken for 10000 iterations: 3.495347 seconds
+Time taken for 20000 iterations: 6.251767 seconds
+Time taken for 30000 iterations: 8.629576 seconds
+Time taken for 50000 iterations: 13.134409 seconds
+Time taken for 100000 iterations: 26.163246 seconds
 Finished running Gibbs sampler for different iterations for Q4.c!
 
 Plotting the posterior and prior distributions of s1 and s2 for Q4.d
@@ -34,7 +34,7 @@ Running One-step ahead predictions for Q6
 Processed 100 matches
 Processed 200 matches
 Processed 300 matches
-Accuracy of one-step ahead predictions: 0.6654411764705882
+Accuracy of one-step ahead predictions: 0.6617647058823529
 Finished running One-step ahead predictions for Q6!
 
 Running moment matching and comparing to Gibbs sampler for Q8
@@ -42,8 +42,8 @@ Moment matching means and stds:
 s1:  29.43269200446036 7.056605844032783
 s2:  20.567307995539636 7.056605844032783
 Gibbs sampler means and stds:
-s1:  29.426034910933826 7.060611531472242
-s2:  20.53632073441224 7.086538814296611
+s1:  29.414938524493966 7.040345554001545
+s2:  20.448654124364126 7.031843296694548
 Finished running moment matching and comparing to Gibbs sampler for Q8!
 
 Running ADF on a new dataset for Q9
@@ -59,5 +59,5 @@ Processed 300 matches
 Processed 100 matches
 Processed 200 matches
 Processed 300 matches
-Accuracy of one-step ahead predictions: 0.6727941176470589
+Accuracy of one-step ahead predictions: 0.48031496062992124
 Finished running improved ADF and one-step ahead predictions for Q10!

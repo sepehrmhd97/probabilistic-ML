@@ -131,48 +131,48 @@ def q10(n_iters):
     # Output the ranking of the teams to a file
     output_ranking(team_skills, "rankings_improved.txt")
 
-    # # Run the improved one-step ahead predictions
+    # Run the improved one-step ahead predictions
     run_onestep_preds_improved("./dataset/SerieA.csv", n_iters, burn_in, mu, sigma, sigma_t)
 
 
 if __name__ == "__main__":
 
     # Q4.a
-    # print("Running Gibbs sampler for Q4.a")
-    # s1_samples, s2_samples = q4_a(20000)
-    # print("Finished running Gibbs sampler for Q4.a!", end="\n\n")
-    # # Q4.b
-    # print("Fitting Gaussians for Q4.b")
-    # dist_s1, dist_s2 = q4_b(s1_samples, s2_samples)
-    # print("Finished fitting Gaussians for Q4.b!", end="\n\n")
+    print("Running Gibbs sampler for Q4.a")
+    s1_samples, s2_samples = q4_a(20000)
+    print("Finished running Gibbs sampler for Q4.a!", end="\n\n")
+    # Q4.b
+    print("Fitting Gaussians for Q4.b")
+    dist_s1, dist_s2 = q4_b(s1_samples, s2_samples)
+    print("Finished fitting Gaussians for Q4.b!", end="\n\n")
     # Q4.c
-    # print("Running Gibbs sampler for different n_iterations for Q4.c")
-    # q4_c()
-    # print("Finished running Gibbs sampler for different iterations for Q4.c!", end="\n\n")
+    print("Running Gibbs sampler for different n_iterations for Q4.c")
+    q4_c()
+    print("Finished running Gibbs sampler for different iterations for Q4.c!", end="\n\n")
     # Q4.d
-    # print("Plotting the posterior and prior distributions of s1 and s2 for Q4.d")
-    # q4_d(20000)
-    # print("Finished plotting the posterior and prior distributions of s1 and s2 for Q4.d!", end="\n\n")
+    print("Plotting the posterior and prior distributions of s1 and s2 for Q4.d")
+    q4_d(20000)
+    print("Finished plotting the posterior and prior distributions of s1 and s2 for Q4.d!", end="\n\n")
 
     # Q5
-    # print("Running ADF for Q5")
-    # q5(7000)
-    # print("Finished running ADF for Q5!", end="\n\n")
+    print("Running ADF for Q5")
+    q5(7000)
+    print("Finished running ADF for Q5!", end="\n\n")
 
-    # # Q6 
-    # print("Running One-step ahead predictions for Q6")
-    # q6(7000)
-    # print("Finished running One-step ahead predictions for Q6!", end="\n\n")
+    # Q6 
+    print("Running One-step ahead predictions for Q6")
+    q6(7000)
+    print("Finished running One-step ahead predictions for Q6!", end="\n\n")
 
-    # # Q8
-    # print("Running moment matching and comparing to Gibbs sampler for Q8")
-    # q8(7000)
-    # print("Finished running moment matching and comparing to Gibbs sampler for Q8!", end="\n\n")
+    # Q8
+    print("Running moment matching and comparing to Gibbs sampler for Q8")
+    q8(7000)
+    print("Finished running moment matching and comparing to Gibbs sampler for Q8!", end="\n\n")
 
-    # # Q9
-    # print("Running ADF on a new dataset for Q9")
-    # q9(7000)
-    # print("Finished running ADF on a new dataset for Q9!", end="\n\n")
+    # Q9
+    print("Running ADF on a new dataset for Q9")
+    q9(7000)
+    print("Finished running ADF on a new dataset for Q9!", end="\n\n")
 
     # Q10
     print("Running improved ADF and one-step ahead predictions for Q10")

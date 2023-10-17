@@ -100,16 +100,25 @@ def run_adf_improved(filename, n_iters, burn_in, mu, sigma, sigma_t):
             else:
                 y = 0
 
-            # Get update coefficients based on the scores of the teams
-            team_1_update_coeff = 1 + abs(score1 - score2) / 3
-            team_2_update_coeff = 1 + abs(score2 - score1) / 3
+            # Get the score difference between the two teams
+            score_diff = score1 - score2
 
             # Run the Gibbs sampler
-            t1_samples, t2_samples = gibbs_sampler(n_iters, burn_in, mu1, mu2, sigma1, sigma2, sigma_t, y, team_1_update_coeff, team_2_update_coeff)
+            t1_samples, t2_samples = gibbs_sampler(n_iters, burn_in, mu1, mu2, sigma1, sigma2, sigma_t, y, 1, 1)
 
-            # Update the team's skill parameters
-            team_skills[team1] = [np.mean(t1_samples[burn_in:]), np.std(t1_samples[burn_in:])]
-            team_skills[team2] = [np.mean(t2_samples[burn_in:]), np.std(t2_samples[burn_in:])]
+            # Update the team's skill parameters based on who won and by how much
+            team1_mean, team1_std = np.mean(t1_samples[burn_in:]), np.std(t1_samples[burn_in:])
+            team2_mean, team2_std = np.mean(t2_samples[burn_in:]), np.std(t2_samples[burn_in:])
+
+            if score_diff > 0:
+                team_skills[team1] = [team1_mean + abs(score_diff)/3, team1_std]
+                team_skills[team2] = [team2_mean - abs(score_diff)/3, team2_std]
+            elif score_diff < 0:
+                team_skills[team1] = [team1_mean - abs(score_diff)/3, team1_std]
+                team_skills[team2] = [team2_mean + abs(score_diff)/3, team2_std]
+            else:
+                team_skills[team1] = [team1_mean, team1_std]
+                team_skills[team2] = [team2_mean, team2_std]
 
             i += 1
 
@@ -251,16 +260,25 @@ def run_onestep_preds_improved(filename, n_iters, burn_in, mu, sigma, sigma_t):
                     correct_preds += 1
                 y = 0
 
-            # Get update coefficients based on the scores of the teams
-            team_1_update_coeff = abs(score1 - score2) / 3
-            team_2_update_coeff = abs(score2 - score1) / 3
+            # Get the score difference between the two teams
+            score_diff = score1 - score2
 
             # Run the Gibbs sampler
-            t1_samples, t2_samples = gibbs_sampler(n_iters, burn_in, mu1, mu2, sigma1, sigma2, sigma_t, y, team_1_update_coeff, team_2_update_coeff)
+            t1_samples, t2_samples = gibbs_sampler(n_iters, burn_in, mu1, mu2, sigma1, sigma2, sigma_t, y, 1, 1)
 
-            # Update the team's skill parameters
-            team_skills[team1] = [np.mean(t1_samples[burn_in:]), np.std(t1_samples[burn_in:])]
-            team_skills[team2] = [np.mean(t2_samples[burn_in:]), np.std(t2_samples[burn_in:])]
+            # Update the team's skill parameters based on who won and by how much
+            team1_mean, team1_std = np.mean(t1_samples[burn_in:]), np.std(t1_samples[burn_in:])
+            team2_mean, team2_std = np.mean(t2_samples[burn_in:]), np.std(t2_samples[burn_in:])
+
+            if score_diff > 0:
+                team_skills[team1] = [team1_mean + abs(score_diff)/3, team1_std]
+                team_skills[team2] = [team2_mean - abs(score_diff)/3, team2_std]
+            elif score_diff < 0:
+                team_skills[team1] = [team1_mean - abs(score_diff)/3, team1_std]
+                team_skills[team2] = [team2_mean + abs(score_diff)/3, team2_std]
+            else:
+                team_skills[team1] = [team1_mean, team1_std]
+                team_skills[team2] = [team2_mean, team2_std]
 
             i += 1
 

@@ -1,4 +1,4 @@
-#!/Users/sepehr.mohammadi/Desktop/probabilistic-ML/APMLvenv/bin/python3
+#!/mnt/e/Amirz/APMLStuff/Project/Source/probabilistic-ML/APMLvenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

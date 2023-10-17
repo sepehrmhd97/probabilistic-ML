@@ -69,12 +69,12 @@ def plot_trace_means_stds(s1_samples, s2_samples, burn_in = None, display=True):
 
     plt.figure(figsize=(12, 6))
 
-    # Means of s1
+    # Stds of s1
     plt.plot(s1_sigmas, label="s1 std", color='blue')
     if burn_in is not None:
         plt.axvline(x=burn_in, color='red', linestyle='--')
 
-    # Means of s2
+    # Stds of s2
     plt.plot(s2_sigmas, label="s2 std", color='orange')
     if burn_in is not None:
         plt.axvline(x=burn_in, color='red', linestyle='--')
